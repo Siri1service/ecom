@@ -375,13 +375,13 @@ ALTER TABLE public.chat_inbox_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
 -- Helper Function: Check User Role
-CREATE OR REPLACE FUNCTION auth.get_user_role()
+CREATE OR REPLACE FUNCTION public.get_user_role()
 RETURNS user_role AS $$
     SELECT role FROM public.profiles WHERE id = auth.uid();
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
 
 -- Helper Function: Check Inactivity Timeout (2 months = 60 days)
-CREATE OR REPLACE FUNCTION auth.is_session_active()
+CREATE OR REPLACE FUNCTION public.is_session_active()
 RETURNS BOOLEAN AS $$
     SELECT (NOW() <= session_valid_until) FROM public.profiles WHERE id = auth.uid();
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
@@ -393,33 +393,33 @@ CREATE POLICY "Public profiles can be created upon auth sign up"
 CREATE POLICY "Users can read own profile"
     ON public.profiles FOR SELECT USING (
         auth.uid() = id OR
-        auth.get_user_role() IN ('admin', 'super_admin')
+        public.get_user_role() IN ('admin', 'super_admin')
     );
 
 CREATE POLICY "Users can update own profile"
     ON public.profiles FOR UPDATE USING (
-        (auth.uid() = id AND auth.is_session_active()) OR
-        auth.get_user_role() = 'super_admin'
+        (auth.uid() = id AND public.is_session_active()) OR
+        public.get_user_role() = 'super_admin'
     );
 
 -- Products & Categories (Public read, Admin manage)
 CREATE POLICY "Anyone can view active categories"
-    ON public.categories FOR SELECT USING (is_active = TRUE OR auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.categories FOR SELECT USING (is_active = TRUE OR public.get_user_role() IN ('admin', 'super_admin'));
 
 CREATE POLICY "Admins can manage categories"
-    ON public.categories FOR ALL USING (auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.categories FOR ALL USING (public.get_user_role() IN ('admin', 'super_admin'));
 
 CREATE POLICY "Anyone can view active products"
-    ON public.products FOR SELECT USING (is_active = TRUE OR auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.products FOR SELECT USING (is_active = TRUE OR public.get_user_role() IN ('admin', 'super_admin'));
 
 CREATE POLICY "Admins can manage products"
-    ON public.products FOR ALL USING (auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.products FOR ALL USING (public.get_user_role() IN ('admin', 'super_admin'));
 
 -- Orders & Order Items
 CREATE POLICY "Users can view own orders"
     ON public.orders FOR SELECT USING (
         auth.uid() = user_id OR
-        auth.get_user_role() IN ('admin', 'super_admin')
+        public.get_user_role() IN ('admin', 'super_admin')
     );
 
 CREATE POLICY "Users can create orders"
@@ -429,7 +429,7 @@ CREATE POLICY "Users can create orders"
 
 CREATE POLICY "Admins can update orders"
     ON public.orders FOR UPDATE USING (
-        auth.get_user_role() IN ('admin', 'super_admin')
+        public.get_user_role() IN ('admin', 'super_admin')
     );
 
 CREATE POLICY "Users can view own order items"
@@ -437,7 +437,7 @@ CREATE POLICY "Users can view own order items"
         EXISTS (
             SELECT 1 FROM public.orders o
             WHERE o.id = order_items.order_id
-            AND (o.user_id = auth.uid() OR auth.get_user_role() IN ('admin', 'super_admin'))
+            AND (o.user_id = auth.uid() OR public.get_user_role() IN ('admin', 'super_admin'))
         )
     );
 
@@ -447,25 +447,25 @@ CREATE POLICY "Admins and Order Owners can view payments"
         EXISTS (
             SELECT 1 FROM public.orders o
             WHERE o.id = payments.order_id
-            AND (o.user_id = auth.uid() OR auth.get_user_role() IN ('admin', 'super_admin'))
+            AND (o.user_id = auth.uid() OR public.get_user_role() IN ('admin', 'super_admin'))
         )
     );
 
 CREATE POLICY "Service and Admins can manage payments"
-    ON public.payments FOR ALL USING (auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.payments FOR ALL USING (public.get_user_role() IN ('admin', 'super_admin'));
 
 -- Affiliate Policies
 CREATE POLICY "Affiliates can view own affiliate account"
     ON public.affiliates FOR SELECT USING (
-        auth.uid() = user_id OR auth.get_user_role() IN ('admin', 'super_admin')
+        auth.uid() = user_id OR public.get_user_role() IN ('admin', 'super_admin')
     );
 
 CREATE POLICY "Admins can manage affiliate accounts"
-    ON public.affiliates FOR ALL USING (auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.affiliates FOR ALL USING (public.get_user_role() IN ('admin', 'super_admin'));
 
 -- Accounting Documents Policies
 CREATE POLICY "Admins can manage accounting documents"
-    ON public.accounting_documents FOR ALL USING (auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.accounting_documents FOR ALL USING (public.get_user_role() IN ('admin', 'super_admin'));
 
 CREATE POLICY "Customer can view their approved invoices/receipts"
     ON public.accounting_documents FOR SELECT USING (
@@ -477,10 +477,10 @@ CREATE POLICY "Customer can view their approved invoices/receipts"
 
 -- Terms Policies
 CREATE POLICY "Anyone can view active terms"
-    ON public.terms_conditions FOR SELECT USING (is_active = TRUE OR auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.terms_conditions FOR SELECT USING (is_active = TRUE OR public.get_user_role() IN ('admin', 'super_admin'));
 
 CREATE POLICY "Admins can manage terms"
-    ON public.terms_conditions FOR ALL USING (auth.get_user_role() IN ('admin', 'super_admin'));
+    ON public.terms_conditions FOR ALL USING (public.get_user_role() IN ('admin', 'super_admin'));
 
 -- ====================================================================
 -- SEED DATA

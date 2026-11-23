@@ -62,7 +62,6 @@ export default function RootLayout({
                     <ul className="text-xs space-y-1.5 text-slate-600 dark:text-slate-400">
                       <li><Link href="/products" className="hover:text-indigo-600">สินค้าทั้งหมด</Link></li>
                       <li><Link href="/promotions" className="hover:text-indigo-600">โปรโมชั่นและส่วนลด</Link></li>
-                      <li><Link href="/coupons" className="hover:text-indigo-600">คูปองเงินสดและส่งฟรี</Link></li>
                       <li><Link href="/blog" className="hover:text-indigo-600">บทความและสาระน่ารู้</Link></li>
                       <li><Link href="/portfolio" className="hover:text-indigo-600">ผลงานและความสำเร็จ</Link></li>
                     </ul>
@@ -74,8 +73,6 @@ export default function RootLayout({
                     </h6>
                     <ul className="text-xs space-y-1.5 text-slate-600 dark:text-slate-400">
                       <li><Link href="/affiliate" className="hover:text-indigo-600">ระบบตัวแทนขาย Affiliate</Link></li>
-                      <li><Link href="/terms" className="hover:text-indigo-600">ข้อกำหนดการใช้งาน (Terms v1.0)</Link></li>
-                      <li><Link href="/privacy" className="hover:text-indigo-600">นโยบายความเป็นส่วนตัว (PDPA)</Link></li>
                       <li><Link href="/admin/login" className="hover:text-indigo-600">เข้าสู่ระบบเจ้าหน้าที่ (Admin)</Link></li>
                     </ul>
                   </div>

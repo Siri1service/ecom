@@ -171,7 +171,7 @@ export default function HomePage() {
             <Tag className="w-5 h-5 text-indigo-600" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">คูปองส่วนลดพิเศษประจำวัน</h3>
           </div>
-          <Link href="/coupons" className="text-xs font-semibold text-indigo-600 hover:underline">
+          <Link href="/promotions" className="text-xs font-semibold text-indigo-600 hover:underline">
             ดูคูปองทั้งหมด
           </Link>
         </div>
@@ -225,11 +225,11 @@ export default function HomePage() {
                 <div>
                   <span className="text-[10px] text-indigo-600 font-semibold">{post.publishedAt} • {post.readTime}</span>
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 hover:text-indigo-600">
-                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                    <Link href="/blog">{post.title}</Link>
                   </h4>
                   <p className="text-xs text-slate-500 line-clamp-2 mt-1">{post.excerpt}</p>
                 </div>
-                <Link href={`/blog/${post.slug}`} className="text-xs font-semibold text-indigo-600 flex items-center gap-1">
+                <Link href="/blog" className="text-xs font-semibold text-indigo-600 flex items-center gap-1">
                   อ่านต่อ <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
